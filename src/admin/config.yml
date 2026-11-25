@@ -1,0 +1,129 @@
+# Espace d'administration du site (Decap CMS).
+# En local : "npm run admin" puis "npm start", et ouvrir http://localhost:8080/admin/
+local_backend: true
+
+# En ligne : Netlify (Identity + Git Gateway). Les admins sont invités par e-mail.
+backend:
+  name: git-gateway
+  branch: main
+
+locale: fr
+editor:
+  preview: false
+media_folder: src/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: evenements
+    label: Agenda (dates de spectacles)
+    label_singular: date
+    description: Chaque date apparaît dans le calendrier et la liste « Nos prochaines dates », avec un bouton Réserver.
+    folder: src/evenements
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{debut | date('DD/MM/YYYY HH:mm')}} · {{titre}}"
+    sortable_fields: [debut, titre]
+    fields:
+      - { label: Titre du spectacle, name: titre, widget: string }
+      - { label: Date et heure, name: debut, widget: datetime, date_format: "DD/MM/YYYY", time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      - { label: Troupe, name: troupe, widget: string, required: false, hint: "Ex. Théâtre de l'Arrosoir, ou le nom de la troupe invitée" }
+      - { label: Événement, name: evenement, widget: string, required: false, hint: "Ex. Festival de théâtre au profit du Téléthon" }
+      - { label: Lieu, name: lieu, widget: string, default: "Studio 4, 4 rue de Wambrechies, Marquette-lez-Lille" }
+      - { label: Tarif, name: tarif, widget: string, required: false }
+      - { label: Lien de réservation HelloAsso, name: reservation, widget: string, required: false, hint: "Laisser vide pour renvoyer vers la page HelloAsso de la troupe" }
+      - { label: Affiche, name: affiche, widget: image, required: false }
+      - { label: Description, name: body, widget: markdown, required: false }
+
+  - name: actualites
+    label: Actualités
+    label_singular: actualité
+    folder: src/actualites
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{date | date('DD/MM/YYYY')}} · {{titre}}"
+    fields:
+      - { label: Titre, name: titre, widget: string }
+      - { label: Date, name: date, widget: datetime, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Texte, name: body, widget: markdown }
+
+  - name: pieces
+    label: Nos pièces
+    label_singular: pièce
+    folder: src/pieces
+    create: true
+    slug: "{{annee}}-{{slug}}"
+    identifier_field: titre
+    summary: "{{annee}} · {{titre}}"
+    sortable_fields: [annee, titre]
+    fields:
+      - { label: Titre, name: titre, widget: string }
+      - { label: Année, name: annee, widget: number, value_type: int }
+      - { label: Auteur, name: auteur, widget: string, required: false }
+      - { label: Affiche, name: affiche, widget: image, required: false }
+      - { label: Mettre en avant (la plus récente), name: a_la_une, widget: boolean, default: false }
+      - { label: Résumé, name: body, widget: markdown, required: false }
+
+  - name: reglages
+    label: Infos de la troupe et apparence
+    files:
+      - name: apparence
+        label: Apparence (couleurs et fonds)
+        file: src/_data/apparence.json
+        fields:
+          - label: Palette de couleurs
+            name: palette
+            widget: select
+            default: rideau-rouge
+            hint: "Choisissez une palette prête, ou « Personnalisée » pour utiliser les couleurs ci-dessous."
+            options:
+              - { label: "Rideau rouge (par défaut)", value: rideau-rouge }
+              - { label: "Bleu nuit", value: bleu-nuit }
+              - { label: "Vert forêt", value: vert-foret }
+              - { label: "Prune", value: prune }
+              - { label: "Personnalisée (couleurs ci-dessous)", value: personnalise }
+          - label: Couleurs personnalisées
+            name: couleurs
+            widget: object
+            collapsed: true
+            hint: "Utilisées seulement si la palette est « Personnalisée »."
+            fields:
+              - { label: "Couleur principale (boutons, dates)", name: principale, widget: color }
+              - { label: "Couleur d'accent (touches dorées)", name: accent, widget: color }
+              - { label: "Fond clair", name: fond, widget: color }
+              - { label: "Fond alterné (une rubrique sur deux)", name: fond_alterne, widget: color }
+              - { label: "Fond sombre (accueil, pièces, pied de page)", name: fond_sombre, widget: color }
+              - { label: "Couleur du texte", name: texte, widget: color }
+          - { label: "Image de fond de l'accueil", name: image_accueil, widget: image, required: false, hint: "Optionnelle. Une photo de scène large fonctionne le mieux." }
+          - { label: "Assombrir l'image d'accueil (%)", name: assombrir_image_accueil, widget: number, value_type: int, min: 0, max: 100, step: 5, default: 75, hint: "Plus le chiffre est haut, plus le texte reste lisible." }
+          - { label: "Image de fond de « Nos pièces »", name: image_pieces, widget: image, required: false }
+          - { label: "Afficher les plis du rideau sur l'accueil", name: rideau, widget: boolean, default: true }
+      - name: site
+        label: Présentation, ateliers, contact et bureau
+        file: src/_data/site.json
+        fields:
+          - { label: Nom, name: nom, widget: string }
+          - { label: Phrase de présentation, name: presentation, widget: text }
+          - { label: Histoire, name: histoire, widget: text }
+          - { label: Photo de la troupe, name: photo_troupe, widget: image }
+          - { label: Légende de la photo, name: legende_photo_troupe, widget: string, required: false }
+          - { label: Page HelloAsso de la troupe, name: helloasso, widget: string }
+          - { label: E-mail, name: email, widget: string }
+          - { label: Facebook, name: facebook, widget: string }
+          - { label: Instagram, name: instagram, widget: string }
+          - { label: Nom du lieu, name: lieu_nom, widget: string }
+          - { label: Adresse du lieu, name: lieu_adresse, widget: string }
+          - { label: Cotisation, name: cotisation, widget: string }
+          - label: Ateliers
+            name: ateliers
+            widget: list
+            fields:
+              - { label: Public, name: public, widget: string }
+              - { label: Quand, name: quand, widget: string }
+              - { label: Détails, name: details, widget: text }
+          - label: Bureau
+            name: bureau
+            widget: list
+            fields:
+              - { label: Rôle, name: role, widget: string }
+              - { label: Nom, name: nom, widget: string }

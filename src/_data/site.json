@@ -1,0 +1,45 @@
+{
+  "nom": "Théâtre de l'Arrosoir",
+  "slogan": "Le théâtre, entre passionnés.",
+  "presentation": "Un groupe de tout âge uni par deux choses : l'amour de la scène et le respect des textes. De Patrick Kermann à Georges Feydeau, en passant par Eugène Ionesco.",
+  "histoire": "Créé en 2005, le Théâtre de l'Arrosoir est une association d'amoureux du théâtre de Marquette-lez-Lille.",
+  "photo_troupe": "/images/uploads/troupe.jpg",
+  "legende_photo_troupe": "La troupe de la saison 2022-2023.",
+  "helloasso": "https://www.helloasso.com/associations/le-theatre-de-l-arrosoir",
+  "email": "theatrearrosoir@gmail.com",
+  "facebook": "https://www.facebook.com/letheatrearrosoir",
+  "instagram": "https://www.instagram.com/theatrearrosoir",
+  "lieu_nom": "Studio 4",
+  "lieu_adresse": "4 rue de Wambrechies, 59520 Marquette-lez-Lille",
+  "cotisation": "180 € par an",
+  "ateliers": [
+    {
+      "public": "Adultes",
+      "quand": "Mardi et mercredi soir",
+      "details": "Séances Découverte en septembre de 20h30 à 22h30 (de 20h à 22h le mardi)."
+    },
+    {
+      "public": "Enfants",
+      "quand": "Mercredi après-midi",
+      "details": "Séances Découverte en septembre de 14h30 à 16h. Un deuxième groupe accueille les 8 à 10 ans."
+    }
+  ],
+  "bureau": [
+    {
+      "role": "Président",
+      "nom": "Adrien Bouquet"
+    },
+    {
+      "role": "Vice-présidente",
+      "nom": "Martine Delattre"
+    },
+    {
+      "role": "Secrétaire",
+      "nom": "Jacqueline Scholaert"
+    },
+    {
+      "role": "Trésorière et communication",
+      "nom": "Isabelle Delage"
+    }
+  ]
+}

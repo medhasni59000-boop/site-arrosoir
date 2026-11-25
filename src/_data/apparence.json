@@ -1,0 +1,15 @@
+{
+  "palette": "rideau-rouge",
+  "couleurs": {
+    "principale": "#a3192f",
+    "accent": "#e3b04b",
+    "fond": "#faf5ee",
+    "fond_alterne": "#f2e8da",
+    "fond_sombre": "#170f13",
+    "texte": "#1d1418"
+  },
+  "image_accueil": "",
+  "assombrir_image_accueil": 75,
+  "image_pieces": "",
+  "rideau": true
+}
