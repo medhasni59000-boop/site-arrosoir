@@ -1,0 +1,7 @@
+# Configuration de l'hébergement gratuit Netlify
+[build]
+  command = "npm run build"
+  publish = "_site"
+
+[build.environment]
+  NODE_VERSION = "22"
