@@ -1,0 +1,261 @@
+---
+permalink: /index.html
+---
+{%- set prochains = collections.evenements | aVenir -%}
+{%- set prochain = prochains[0] -%}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ site.nom }} · Troupe amateur à Marquette-lez-Lille</title>
+  <meta name="description" content="{{ site.histoire }} Ateliers adultes et enfants, création annuelle en juin et festival au profit du Téléthon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>{{ theme.css | safe }}</style>
+  <meta name="theme-color" content="{{ theme.couleurs.fond_sombre }}">
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="{{ site.nom }}, accueil">
+        <span class="brand-mark" aria-hidden="true">🎭</span>
+        <span class="brand-name">{{ site.nom }}</span>
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="nav" aria-label="Navigation principale">
+        <a href="#agenda">Agenda</a>
+        <a href="#actualites">Actualités</a>
+        <a href="#troupe">L'association</a>
+        <a href="#ateliers">Faire du théâtre</a>
+        <a href="#spectacles">Nos pièces</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="{{ site.helloasso }}" target="_blank" rel="noopener">Billetterie</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="eyebrow">Troupe amateur · Marquette-lez-Lille · depuis 2005</p>
+          <h1>Le théâtre, <em>entre passionnés</em>.</h1>
+          <p class="lead">{{ site.presentation }}</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#agenda">{% if prochain %}Prochain spectacle : {{ prochain.data.debut | jourNum }} {{ prochain.data.debut | moisCourt }}{% else %}Voir l'agenda{% endif %}</a>
+            <a class="btn btn-ghost" href="#ateliers">Rejoindre la troupe</a>
+          </div>
+        </div>
+        <figure class="hero-poster">
+          {% if prochain and prochain.data.affiche %}
+          <img src="{{ prochain.data.affiche }}" alt="Affiche : {{ prochain.data.evenement or prochain.data.titre }}">
+          {% else %}
+          <img src="{{ site.photo_troupe }}" alt="La troupe">
+          {% endif %}
+        </figure>
+      </div>
+    </section>
+
+    <!-- AGENDA + CALENDRIER -->
+    <section class="section" id="agenda">
+      <div class="wrap">
+        <p class="eyebrow">Agenda</p>
+        <h2>Nos prochaines dates</h2>
+
+        <div class="agenda-grid">
+          <div class="calendar" id="calendar" aria-label="Calendrier des événements">
+            <div class="cal-head">
+              <button class="cal-nav" data-dir="-1" aria-label="Mois précédent">‹</button>
+              <h3 class="cal-title" aria-live="polite"></h3>
+              <button class="cal-nav" data-dir="1" aria-label="Mois suivant">›</button>
+            </div>
+            <div class="cal-weekdays" aria-hidden="true"><span>lun</span><span>mar</span><span>mer</span><span>jeu</span><span>ven</span><span>sam</span><span>dim</span></div>
+            <div class="cal-days"></div>
+            <p class="cal-hint">Cliquez sur une date en couleur pour voir le détail.</p>
+          </div>
+
+          <div class="agenda-list">
+            {% if prochains.length %}
+            <ol class="dates" id="event-list">
+              {% for e in prochains %}
+              <li class="date-card" id="ev-{{ loop.index }}" data-day="{{ e.data.debut | jourISO }}">
+                <div class="date-badge"><span class="day">{{ e.data.debut | jourCourt }}</span><span class="num">{{ e.data.debut | jourNum }}</span><span class="month">{{ e.data.debut | moisCourt }}</span></div>
+                <div class="date-body">
+                  {% if e.data.evenement %}<p class="date-event">{{ e.data.evenement }}</p>{% endif %}
+                  <h3>{{ e.data.titre }}</h3>
+                  {% if e.data.troupe %}<p>{{ e.data.troupe }}</p>{% endif %}
+                  <p class="time">{{ e.data.debut | heure }}{% if e.data.lieu %} · {{ e.data.lieu }}{% endif %}</p>
+                  {% if e.data.tarif %}<p class="price">{{ e.data.tarif }}</p>{% endif %}
+                  <a class="btn btn-primary btn-sm" href="{{ e.data.reservation or site.helloasso }}" target="_blank" rel="noopener">Réserver sur HelloAsso</a>
+                </div>
+              </li>
+              {% endfor %}
+            </ol>
+            {% else %}
+            <p class="empty">Pas de date annoncée pour le moment. Suivez-nous sur <a href="{{ site.facebook }}">Facebook</a> ou <a href="{{ site.instagram }}">Instagram</a> pour ne rien manquer.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTUALITÉS -->
+    <section class="section section-tight" id="actualites">
+      <div class="wrap">
+        <p class="eyebrow">Les dernières nouvelles</p>
+        <h2>Actualités</h2>
+        <div class="news">
+          {% for n in collections.actualites.slice(0, 3) %}
+          <article class="news-item">
+            {% if n.data.image %}<img src="{{ n.data.image }}" alt="" loading="lazy">{% endif %}
+            <div>
+              <time datetime="{{ n.date.toISOString() }}">{{ n.date | dateLongue }}</time>
+              <h3>{{ n.data.titre }}</h3>
+              <div class="news-text">{{ n.content | safe }}</div>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- L'ASSOCIATION -->
+    <section class="section section-alt" id="troupe">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">L'association</p>
+          <h2>Une troupe, une saison, une scène</h2>
+          <p>{{ site.histoire }} Chaque saison suit le même fil :</p>
+          <ul class="season">
+            <li><strong>Fin juin</strong> · notre création théâtrale de l'année.</li>
+            <li><strong>Fin novembre</strong> · le festival au profit du Téléthon.</li>
+            <li><strong>Toute l'année</strong> · des événements avec la mairie et les associations de Marquette.</li>
+          </ul>
+        </div>
+        <figure class="photo">
+          <img src="{{ site.photo_troupe }}" alt="Photo de groupe de la troupe" loading="lazy">
+          {% if site.legende_photo_troupe %}<figcaption>{{ site.legende_photo_troupe }}</figcaption>{% endif %}
+        </figure>
+      </div>
+    </section>
+
+    <!-- ATELIERS -->
+    <section class="section" id="ateliers">
+      <div class="wrap">
+        <p class="eyebrow">Faire du théâtre</p>
+        <h2>Les ateliers</h2>
+        <p class="section-intro">Tout le monde peut intégrer la troupe. Venez essayer : des séances Découverte sont proposées pendant tout le mois de septembre.</p>
+        <div class="cards">
+          {% for a in site.ateliers %}
+          <article class="card">
+            <h3>{{ a.public }}</h3>
+            <p class="card-when">{{ a.quand }}</p>
+            <p>{{ a.details }}</p>
+          </article>
+          {% endfor %}
+          <article class="card card-info">
+            <h3>Infos pratiques</h3>
+            <dl>
+              <dt>Lieu</dt><dd>{{ site.lieu_nom }}, {{ site.lieu_adresse }}</dd>
+              <dt>Cotisation</dt><dd>{{ site.cotisation }}</dd>
+            </dl>
+            <a class="link-arrow" href="#contact">Nous écrire pour s'inscrire</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOS PIÈCES -->
+    <section class="section section-dark" id="spectacles">
+      <div class="wrap">
+        <p class="eyebrow">Depuis 2010</p>
+        <h2>Nos pièces</h2>
+
+        {% for p in collections.pieces %}{% if p.data.a_la_une %}
+        <article class="feature">
+          <img src="{{ p.data.affiche }}" alt="Affiche de {{ p.data.titre }}" loading="lazy">
+          <div>
+            <p class="eyebrow">Création {{ p.data.annee }}</p>
+            <h3>{{ p.data.titre }}{% if p.data.auteur %} <span class="author">de {{ p.data.auteur }}</span>{% endif %}</h3>
+            {{ p.content | safe }}
+          </div>
+        </article>
+        {% endif %}{% endfor %}
+
+        <div class="filters" role="group" aria-label="Filtrer par période">
+          <button class="filter is-active" data-filter="all">Tout</button>
+          <button class="filter" data-filter="2020">2020 et après</button>
+          <button class="filter" data-filter="2010">Avant 2020</button>
+        </div>
+        <ul class="posters" id="posters">
+          {% for p in collections.pieces %}
+          <li class="poster" data-year="{{ p.data.annee }}">
+            {% if p.data.affiche %}<img src="{{ p.data.affiche }}" alt="Affiche de {{ p.data.titre }}" loading="lazy">{% endif %}
+            <div class="poster-meta">
+              <span class="poster-year">{{ p.data.annee }}</span>
+              <span class="poster-title">{{ p.data.titre }}</span>
+              {% if p.data.auteur %}<span class="poster-author">{{ p.data.auteur }}</span>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Une question ? Envie d'essayer ?</h2>
+          <p>Écrivez-nous en indiquant le destinataire de votre message.</p>
+          <p class="email"><a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+          <div class="socials">
+            <a href="{{ site.facebook }}" target="_blank" rel="noopener">Facebook</a>
+            <a href="{{ site.instagram }}" target="_blank" rel="noopener">Instagram</a>
+            <a href="{{ site.helloasso }}" target="_blank" rel="noopener">HelloAsso</a>
+          </div>
+          <address><strong>{{ site.lieu_nom }}</strong><br>{{ site.lieu_adresse }}</address>
+        </div>
+        <div>
+          <h3>Le bureau</h3>
+          <ul class="board">
+            {% for m in site.bureau %}<li><span>{{ m.role }}</span> {{ m.nom }}</li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© {{ site.nom }}, association de théâtre amateur de Marquette-lez-Lille.</p>
+    </div>
+  </footer>
+
+  <script>
+    window.EVENEMENTS = [
+      {%- for e in collections.evenements %}
+      { debut: {{ e.data.debut | json | safe }}, titre: {{ e.data.titre | json | safe }}, reservation: {{ (e.data.reservation or site.helloasso) | json | safe }} }{% if not loop.last %},{% endif %}
+      {%- endfor %}
+    ];
+  </script>
+  <script src="/assets/script.js"></script>
+  <!-- Connexion des admins (invitation, mot de passe oublié) : renvoie vers /admin/ -->
+  <script>
+    if (/(invite|recovery|confirmation)_token/.test(location.hash)) {
+      var s = document.createElement('script');
+      s.src = 'https://identity.netlify.com/v1/netlify-identity-widget.js';
+      s.onload = function () {
+        netlifyIdentity.on('login', function () { location.href = '/admin/'; });
+      };
+      document.head.appendChild(s);
+    }
+  </script>
+</body>
+</html>
